@@ -1,0 +1,38 @@
+
+node {
+    def server = Artifactory.server 'loren-6x'
+    server.credentialsId = 'c87d5581-852e-4d59-b489-057a90d7f65b'
+    def rtNpm = Artifactory.newNpmBuild()
+    def buildInfo = Artifactory.newBuildInfo()
+    
+    stage ('Clone') {
+        git url: 'https://github.com/lorenyeung/project-examples.git'
+    }
+
+    stage ('Artifactory configuration') {
+        rtNpm.deployer repo: 'npm-virtual', server: server
+        rtNpm.resolver repo: 'npm-virtual', server: server
+        rtNpm.tool = 'NPM_JENKINS_TOOL' // Tool name from Jenkins configuration   
+    }
+
+    stage ('Install npm') {
+        sh 'rm -rf /var/lib/jenkins/workspace/npm-xray-pipeline-example-do-not-change/npm-example/node_modules/'
+        sh 'npm cache clean --force'
+        rtNpm.install buildInfo: buildInfo, path: '/var/lib/jenkins/workspace/npm-xray-pipeline-example-do-not-change/npm-example', args: '--always-auth=true'
+    }
+
+    stage ('Publish npm') {
+        rtNpm.publish buildInfo: buildInfo, path: 'npm-example'
+    }
+
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
+    stage ('Xray scan') {
+        def failbuild1=true
+        def scanConfig = [ 'buildName' : buildInfo.name, 'buildNumber' : buildInfo.number, 'failBuild' : failbuild1 ]
+        def scanResult = server.xrayScan scanConfig
+        echo scanResult as String
+    
+    }
+}
