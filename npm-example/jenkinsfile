@@ -10,8 +10,8 @@ node {
     }
 
     stage ('Artifactory configuration') {
-        rtNpm.deployer repo: 'npm-virtual', server: server
-        rtNpm.resolver repo: 'npm-virtual', server: server
+        rtNpm.deployer repo: 'npm', server: server
+        rtNpm.resolver repo: 'npm', server: server
         rtNpm.tool = 'NPM_JENKINS_TOOL' // Tool name from Jenkins configuration   
     }
 
