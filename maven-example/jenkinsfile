@@ -1,0 +1,34 @@
+node {
+    def server = Artifactory.server "${params.server}"
+    server.credentialsId = "${params.credentialid}"
+    def rtMaven = Artifactory.newMavenBuild()
+    def buildInfo
+
+    stage ('Clone') {
+        git url: 'https://github.com/jfrog/project-examples.git'
+    }
+
+    stage ('Artifactory configuration') {
+        rtMaven.tool = 'maven' // Tool name from Jenkins configuration
+        rtMaven.deployer releaseRepo: "${params.deployreleaserepo}", snapshotRepo: "${params.resolvesnapshotrepo}", server: server
+        rtMaven.resolver releaseRepo: "${params.resolvereleaserepo}", snapshotRepo: "${params.resolvesnapshotrepo}", server: server
+        buildInfo = Artifactory.newBuildInfo()
+    }
+
+    stage ('Exec Maven') {
+        rtMaven.run pom: 'maven-example/pom.xml', goals: 'clean install -U', buildInfo: buildInfo
+    }
+
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
+
+    stage ('Xray scan') {
+        def scanConfig = [
+        'buildName'      : buildInfo.name,
+        'buildNumber'    : buildInfo.number
+        ]
+        def scanResult = server.xrayScan scanConfig
+        echo scanResult as String
+    }
+}
