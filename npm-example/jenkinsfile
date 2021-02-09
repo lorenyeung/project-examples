@@ -1,11 +1,25 @@
 
 node {
+    parameters {
+        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+
+        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+
+        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+
+        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+
+        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+    }
+    
+    
     def server = Artifactory.server "${params.server}"
     server.credentialsId = "${params.credentialid}"
     def rtNpm = Artifactory.newNpmBuild()
     def buildInfo = Artifactory.newBuildInfo()
     
     stage ('Clone') {
+        echo "Hello ${params.PERSON}"
         git url: 'https://github.com/lorenyeung/project-examples.git'
     }
 
