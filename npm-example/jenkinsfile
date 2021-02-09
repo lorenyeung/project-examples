@@ -10,8 +10,8 @@ node {
     }
 
     stage ('Artifactory configuration') {
-        rtNpm.deployer repo: "${params.deployrepo}", server: server
-        rtNpm.resolver repo: "${params.resolverepo}", server: server
+        rtNpm.deployer repo: '${params.deployrepo}', server: server
+        rtNpm.resolver repo: '${params.resolverepo}', server: server
         rtNpm.tool = 'NPM_JENKINS_TOOL' // Tool name from Jenkins configuration   
     }
 
