@@ -1,0 +1,38 @@
+node {
+    def server = Artifactory.server "${params.server}"
+    server.credentialsId = "${params.credentialid}"
+    def buildInfo = Artifactory.newBuildInfo()
+    IMAGE = 'ubuntu'
+    TAG = 'trusty'
+    RESOLVEREPO = 'docker'
+    DEPLOYREPO = 'docker'
+    ART =server.substring(0, url.indexOf('/'))
+    
+    stage('build') {
+        def rtDocker = Artifactory.docker server:server
+        // Attach custom properties to the published artifacts:
+        //rtDocker.addProperty("project-name","docker1").addProperty("status","stable")
+        
+        buildInfo = rtDocker.pull 'ART/IMAGE:TAG', 'RESOLVEREPO'
+        
+        //hard coding the build name
+        //buildInfo.name = "docker-xray-pipeline"
+        //buildInfo.number = "12"
+        COMMIT_ID = "test-1"
+    
+        //adding properties to manifest.json
+        //rtDocker.addProperty("build.name1",COMMIT_ID).addProperty("build.number","12+e")
+        
+        // Push a docker image to Artifactory (here we're pushing hello-world:latest). The push method also expects Artifactory repository name:
+        buildInfo = rtDocker.push(ART+'/'+REPO+'/'+IMAGE+':'+TAG,'DEPLOYREPO', buildInfo)
+        
+        // Publish the build-info to Artifactory:
+        server.publishBuildInfo buildInfo
+    }
+    stage('xray scan') {
+        def failbuild1=true
+        def scanConfig = [ 'buildName' : buildInfo.name, 'buildNumber' : buildInfo.number, 'failBuild' : failbuild1 ]
+        def scanResult = server.xrayScan scanConfig
+        echo scanResult as String
+    }
+}
