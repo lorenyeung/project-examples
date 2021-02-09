@@ -6,10 +6,12 @@ node {
     TAG = 'trusty'
     RESOLVEREPO = 'docker'
     DEPLOYREPO = 'docker'
-    echo '${server}'
-    ART = server.substring(0, server.indexOf('/'))
+   
+    
     
     stage('build') {
+        echo '${server}'
+        ART = server.substring(0, server.indexOf('/'))
         def rtDocker = Artifactory.docker server:server
         // Attach custom properties to the published artifacts:
         //rtDocker.addProperty("project-name","docker1").addProperty("status","stable")
