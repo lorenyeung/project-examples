@@ -5,13 +5,13 @@ node {
     def buildInfo
 
     stage ('Clone') {
-        git url: 'https://github.com/jfrog/project-examples.git'
+        git url: 'https://github.com/lorenyeung/project-examples.git'
     }
 
     stage ('Artifactory configuration') {
         rtMaven.tool = 'maven' // Tool name from Jenkins configuration
-        rtMaven.deployer releaseRepo: "${params.deployreleaserepo}", snapshotRepo: "${params.resolvesnapshotrepo}", server: server
-        rtMaven.resolver releaseRepo: "${params.resolvereleaserepo}", snapshotRepo: "${params.resolvesnapshotrepo}", server: server
+        rtMaven.deployer releaseRepo: "${params.deployreleaserepo}".toString(), snapshotRepo: "${params.resolvesnapshotrepo}".toString(), server: server
+        rtMaven.resolver releaseRepo: "${params.resolvereleaserepo}".toString(), snapshotRepo: "${params.resolvesnapshotrepo}".toString(), server: server
         buildInfo = Artifactory.newBuildInfo()
     }
 
