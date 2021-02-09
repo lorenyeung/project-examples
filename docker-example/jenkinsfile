@@ -4,7 +4,8 @@ node {
     def buildInfo = Artifactory.newBuildInfo()
     
     stage('build') {
-        def art_docker = server.url.substring(0, server.url.indexOf('/artifactory'))
+        def art_host = server.url.substring(0, server.url.indexOf('/artifactory'))
+        def art_docker = art_host.substring(1, art_host.indexOf('://'))
         def rtDocker = Artifactory.docker server:server
         // Attach custom properties to the published artifacts:
         //rtDocker.addProperty("project-name","docker1").addProperty("status","stable")
