@@ -23,7 +23,7 @@ node {
         //rtDocker.addProperty("build.name1",COMMIT_ID).addProperty("build.number","12+e")
         
         // Push a docker image to Artifactory (here we're pushing hello-world:latest). The push method also expects Artifactory repository name:
-        buildInfo = rtDocker.push(ART+'/'+REPO+'/'+IMAGE+':'+TAG,'DEPLOYREPO', buildInfo)
+        buildInfo = rtDocker.push(${art_docker}/${params.resolverepo}/${params.image}:${params.tag},"${params.deployrepo}", buildInfo)
         
         // Publish the build-info to Artifactory:
         server.publishBuildInfo buildInfo
