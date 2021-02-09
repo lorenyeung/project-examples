@@ -6,7 +6,8 @@ node {
     TAG = 'trusty'
     RESOLVEREPO = 'docker'
     DEPLOYREPO = 'docker'
-    ART =server.substring(0, server.indexOf('/'))
+    echo '${server}'
+    ART = server.substring(0, server.indexOf('/'))
     
     stage('build') {
         def rtDocker = Artifactory.docker server:server
