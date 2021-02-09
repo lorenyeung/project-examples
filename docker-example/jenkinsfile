@@ -22,6 +22,8 @@ node {
         //adding properties to manifest.json
         //rtDocker.addProperty("build.name1",COMMIT_ID).addProperty("build.number","12+e")
         
+        // need to tag
+        sh 'docker tag "${art_docker}/${params.resolverepo}/${params.image}:${params.tag}" "${art_docker}/${params.deployrepo}/${params.image}:${params.tag}"'
         // Push a docker image to Artifactory (here we're pushing hello-world:latest). The push method also expects Artifactory repository name:
         buildInfo = rtDocker.push("${art_docker}/${params.resolverepo}/${params.image}:${params.tag}","${params.deployrepo}", buildInfo)
         
