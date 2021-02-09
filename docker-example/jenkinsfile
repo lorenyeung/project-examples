@@ -4,12 +4,12 @@ node {
     def buildInfo = Artifactory.newBuildInfo()
     
     stage('build') {
-        ART = server.url.substring(0, server.url.indexOf('/'))
+        def art_docker = server.url.substring(0, server.url.indexOf('/'))
         def rtDocker = Artifactory.docker server:server
         // Attach custom properties to the published artifacts:
         //rtDocker.addProperty("project-name","docker1").addProperty("status","stable")
         
-        buildInfo = rtDocker.pull 'ART'+'/${params.image}.toString():${params.tag}.toString()', 'RESOLVEREPO'
+        buildInfo = rtDocker.pull 'art_docker/${params.image}.toString():${params.tag}.toString()', 'RESOLVEREPO'
         
         //hard coding the build name
         //buildInfo.name = "docker-xray-pipeline"
