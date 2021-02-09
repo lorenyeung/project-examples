@@ -10,7 +10,7 @@ node {
     
     
     stage('build') {
-        echo '${server}'
+        echo server
         ART = server.substring(0, server.indexOf('/'))
         def rtDocker = Artifactory.docker server:server
         // Attach custom properties to the published artifacts:
