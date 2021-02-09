@@ -1,7 +1,7 @@
 
 node {
     def server = Artifactory.server "${params.server}"
-    server.credentialsId = 'c87d5581-852e-4d59-b489-057a90d7f65b'
+    server.credentialsId = "${params.credentialid}"
     def rtNpm = Artifactory.newNpmBuild()
     def buildInfo = Artifactory.newBuildInfo()
     
@@ -10,8 +10,8 @@ node {
     }
 
     stage ('Artifactory configuration') {
-        rtNpm.deployer repo: 'npm', server: server
-        rtNpm.resolver repo: 'npm', server: server
+        rtNpm.deployer repo: "${params.deployrepo}", server: server
+        rtNpm.resolver repo: "${params.resolverepo}", server: server
         rtNpm.tool = 'NPM_JENKINS_TOOL' // Tool name from Jenkins configuration   
     }
 
