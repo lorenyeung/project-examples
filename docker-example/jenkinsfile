@@ -6,7 +6,7 @@ node {
     stage('build') {
         def art_host = server.url.substring(0, server.url.indexOf('/artifactory'))
         echo art_host
-        def art_docker = art_host.substring(1, art_host.indexOf('://'))
+        def art_docker = art_host.substring(art_host.indexOf('http://'), art_host.length())
         echo art_docker
         def rtDocker = Artifactory.docker server:server
         // Attach custom properties to the published artifacts:
