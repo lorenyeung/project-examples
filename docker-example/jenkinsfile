@@ -26,7 +26,7 @@ node {
         sh "docker tag ${art_docker}/${params.resolverepo}/${params.image}:${params.tag} ${art_docker}/${params.deployrepo}/${params.image}:${params.tag}"
         
         // Push a docker image to Artifactory (here we're pushing hello-world:latest). The push method also expects Artifactory repository name:
-        buildInfo = rtDocker.push("${art_docker}/${params.resolverepo}/${params.image}:${params.tag}","${params.deployrepo}", buildInfo)
+        buildInfo = rtDocker.push("${art_docker}/${params.deployrepo}/${params.image}:${params.tag}","${params.deployrepo}", buildInfo)
         
         // Publish the build-info to Artifactory:
         server.publishBuildInfo buildInfo
