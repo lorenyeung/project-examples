@@ -11,7 +11,7 @@ node {
     
     stage('build') {
         echo server.url
-        ART = server.substring(0, server.indexOf('/'))
+        ART = server.url.substring(0, server.url.indexOf('/'))
         def rtDocker = Artifactory.docker server:server
         // Attach custom properties to the published artifacts:
         //rtDocker.addProperty("project-name","docker1").addProperty("status","stable")
