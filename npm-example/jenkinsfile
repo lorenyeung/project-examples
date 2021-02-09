@@ -1,6 +1,6 @@
 
 node {
-    def server = Artifactory.server 'loren-6x'
+    def server = Artifactory.server "${params.server}"
     server.credentialsId = 'c87d5581-852e-4d59-b489-057a90d7f65b'
     def rtNpm = Artifactory.newNpmBuild()
     def buildInfo = Artifactory.newBuildInfo()
